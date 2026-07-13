@@ -10,43 +10,71 @@ Tabela.PlayerPermission = {
 }
 
 Tabela.Characters = {
-	["Meguna"] = {Tier = 1500, PlayersPermission = 
-		{}
-		,Icon = 102018078185174};
-	["Diavolo"] = {Tier = 1, PlayersPermission = 
-		{}
-		,Icon = 6283115481};
-	["Madara"] = {Tier = 1000, PlayersPermission = 
-		{7192197250}
-		,Icon = 7105102939};
-	["Itadori"] = {Tier = 1000, PlayersPermission = 
-		{}
-		,Icon = 7061182461};
-	["Itachi"] = {Tier = 1000, PlayersPermission = 
-		{}
-		,Icon = 5561921617};
-	["GojoTeen"] = {Tier = 1000, PlayersPermission = 
-		{}
-		,Icon = 14023532241};
-	["Eren"] = {Tier = 200, PlayersPermission = 
-		{}
-		,Icon = 5526435935};
-	["SukunaHeian"] = {Tier = 2000, PlayersPermission = 
-		{}
-		,Icon = 112861864668055};
-	["Inumaki"] = {Tier = 2000, PlayersPermission = 
-		{11020147146}
-		,Icon = 6421507763};
-	["Modulo Itadori"] = {Tier = 2500, PlayersPermission = 
-		{}
-		,Icon = 123703766024119};
+	["Meguna"] = {Tier = 1500, PlayersPermission = {}, Icon = 102018078185174};
+	["Diavolo"] = {Tier = 1, PlayersPermission = {}, Icon = 6283115481};
+	["Madara"] = {Tier = 1000, PlayersPermission = {7192197250}, Icon = 7105102939};
+	["Itadori"] = {Tier = 1000, PlayersPermission = {}, Icon = 7061182461};
+	["Itachi"] = {Tier = 1000, PlayersPermission = {}, Icon = 5561921617};
+	["GojoTeen"] = {Tier = 1000, PlayersPermission = {}, Icon = 14023532241};
+	["Eren"] = {Tier = 200, PlayersPermission = {}, Icon = 5526435935};
+	["SukunaHeian"] = {Tier = 2000, PlayersPermission = {}, Icon = 112861864668055};
+	["Inumaki"] = {Tier = 2000, PlayersPermission = {11020147146}, Icon = 6421507763};
+	["Modulo Itadori"] = {Tier = 2500, PlayersPermission = {}, Icon = 123703766024119};
 }
 
+-- Função para validar se o jogador pode usar um personagem
+Tabela.CanUseCharacter = function(playerName, characterName)
+	local playerData = Tabela.PlayerPermission[playerName]
+	local characterData = Tabela.Characters[characterName]
+	
+	if not playerData or not characterData then
+		return false, "Jogador ou personagem não existe"
+	end
+	
+	-- Verifica se o tier do jogador é suficiente
+	if playerData.PlayerTier < characterData.Tier then
+		return false, "Tier insuficiente"
+	end
+	
+	-- Verifica se há restrição de jogador específico
+	if #characterData.PlayersPermission > 0 then
+		local hasPermission = false
+		for _, userId in ipairs(characterData.PlayersPermission) do
+			if userId == playerName then
+				hasPermission = true
+				break
+			end
+		end
+		if not hasPermission then
+			return false, "Sem permissão para este personagem"
+		end
+	end
+	
+	return true, "Permissão concedida"
+end
 
-Tabela.TrocarPersonagem = function (args)
+Tabela.TrocarPersonagem = function(args)
 	local Parent = script.Parent
+	local Player = args.Player
+	
+	-- Validar permissão antes de enviar
+	local canUse, message = Tabela.CanUseCharacter(Player.Name, args.char)
+	
+	if not canUse then
+		print("Erro ao trocar personagem: " .. message)
+		return
+	end
+	
+	-- Buscar o evento
 	local Event = game.ReplicatedStorage:WaitForChild("ChangeCharacter")
-	Event:FireServer({char = args.char, Permission = Tabela.Characters[args.char], PlayerTier = Tabela.PlayerPermission, Player = args.Player})
+	
+	-- Enviar dados corretos
+	Event:FireServer({
+		char = args.char,
+		CharacterData = Tabela.Characters[args.char],
+		PlayerTier = Tabela.PlayerPermission[Player.Name].PlayerTier,
+		Player = Player
+	})
 	
 	Parent.Parent.Visible = false
 end
