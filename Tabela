@@ -1,0 +1,54 @@
+local Tabela = {}
+
+Tabela.PlayerPermission = {
+	["alexgamer13ks"] = {PlayerTier = 10000};
+	["AiraDEV6"] = {PlayerTier = 2000};
+	["Davipilantra123"] = {PlayerTier = 2000};
+	["caxstotozin"] = {PlayerTier = 2000};
+	["Lucksales12"] = {PlayerTier = 5000};
+	["Claaraxm"] = {PlayerTier = 2000};
+}
+
+Tabela.Characters = {
+	["Meguna"] = {Tier = 1500, PlayersPermission = 
+		{}
+		,Icon = 102018078185174};
+	["Diavolo"] = {Tier = 1, PlayersPermission = 
+		{}
+		,Icon = 6283115481};
+	["Madara"] = {Tier = 1000, PlayersPermission = 
+		{7192197250}
+		,Icon = 7105102939};
+	["Itadori"] = {Tier = 1000, PlayersPermission = 
+		{}
+		,Icon = 7061182461};
+	["Itachi"] = {Tier = 1000, PlayersPermission = 
+		{}
+		,Icon = 5561921617};
+	["GojoTeen"] = {Tier = 1000, PlayersPermission = 
+		{}
+		,Icon = 14023532241};
+	["Eren"] = {Tier = 200, PlayersPermission = 
+		{}
+		,Icon = 5526435935};
+	["SukunaHeian"] = {Tier = 2000, PlayersPermission = 
+		{}
+		,Icon = 112861864668055};
+	["Inumaki"] = {Tier = 2000, PlayersPermission = 
+		{11020147146}
+		,Icon = 6421507763};
+	["Modulo Itadori"] = {Tier = 2500, PlayersPermission = 
+		{}
+		,Icon = 123703766024119};
+}
+
+
+Tabela.TrocarPersonagem = function (args)
+	local Parent = script.Parent
+	local Event = game.ReplicatedStorage:WaitForChild("ChangeCharacter")
+	Event:FireServer({char = args.char, Permission = Tabela.Characters[args.char], PlayerTier = Tabela.PlayerPermission, Player = args.Player})
+	
+	Parent.Parent.Visible = false
+end
+
+return Tabela
