@@ -1,0 +1,124 @@
+local Tabela = require(script.Parent:WaitForChild("Loader"))
+local Players = game:GetService("Players")
+local Plr = Players.LocalPlayer
+
+wait(1)
+
+local Character = Tabela.Characters
+local PlayerPermission = Tabela.PlayerPermission
+local DB = false
+
+local activeTimers = {}
+
+local function formatTimeRemaining(seconds)
+	if seconds <= 0 then return "00:00:00" end
+
+	local totalHours = math.floor(seconds / 3600)
+	local minutes = math.floor((seconds % 3600) / 60)
+	local secs = math.floor(seconds % 60)
+
+	return string.format("%02d:%02d:%02d", totalHours, minutes, secs)
+end
+
+local function createCharButton(charName, expiryTime)
+	local Char = Character[charName]
+	if not Char then return end
+
+	
+	if script.Parent:FindFirstChild(tostring(charName)) then return end
+
+	
+	local hasPermission = false
+	
+	-- Verificar permissões específicas (por UserId ou Nome)
+	if Char.PlayersPermission and #Char.PlayersPermission > 0 then
+		for _, permission in ipairs(Char.PlayersPermission) do
+			if permission == Plr.UserId or permission == Plr.Name then
+				hasPermission = true
+				break
+			end
+		end
+	end
+	
+	-- Se não tem permissão específica, verificar tier
+	if not hasPermission and Tabela.PlayerPermission[Plr.Name] then
+		local perm = Tabela.PlayerPermission[Plr.Name]
+		if Char.Tier and perm.PlayerTier >= tonumber(Char.Tier) then
+			hasPermission = true
+		end
+	end
+
+	if not hasPermission then return end
+
+	local BaseButton = script.BaseCharButton:Clone()
+	local ScrollingFrame = script.Parent
+	BaseButton.Parent = ScrollingFrame
+	BaseButton.Visible = true
+	BaseButton.Name = tostring(charName)
+	BaseButton.NomeChar.Text = BaseButton.Name
+	BaseButton.Image = "rbxassetid://".. tostring(Character[charName].Icon)
+
+	
+	local isTemp = type(expiryTime) == "number" and expiryTime > 0
+	local tempLabel = BaseButton:FindFirstChild("Temp")
+
+	if isTemp and tempLabel then
+		tempLabel.Visible = true
+		tempLabel.AnchorPoint = Vector2.new(0.5, 0)
+		tempLabel.Position = UDim2.new(0.5, 0, 1, 2)
+		tempLabel.Size = UDim2.new(0.9, 0, 0.3, 0)
+		tempLabel.BackgroundTransparency = 0.5
+		tempLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		tempLabel.Text = formatTimeRemaining(expiryTime - os.time())
+
+		if activeTimers[charName] then
+			task.cancel(activeTimers[charName])
+			activeTimers[charName] = nil
+		end
+
+		activeTimers[charName] = task.spawn(function()
+			while true do
+				task.wait(1)
+				if not BaseButton or not BaseButton.Parent then
+					activeTimers[charName] = nil
+					break
+				end
+				local rem = expiryTime - os.time()
+				if rem <= 0 then
+					tempLabel.Text = "00:00:00"
+					task.wait(2)
+					if BaseButton and BaseButton.Parent then
+						BaseButton.Parent = nil
+					end
+					activeTimers[charName] = nil
+					break
+				end
+				tempLabel.Text = formatTimeRemaining(rem)
+			end
+		end)
+	end
+
+	BaseButton.MouseButton1Click:Connect(function()
+		if DB then return end
+		DB = true
+		task.delay(1, function()
+			DB = false
+		end)
+		-- ✅ CORRIGIDO: Agora passa o Player corretamente
+		Tabela.TrocarPersonagem({char = tostring(charName), Player = Plr})
+		print("Personagem selecionado: " .. charName)
+	end)
+end
+
+
+for i_character, Char in pairs(Character) do
+	createCharButton(i_character)
+end
+
+
+local unlockEvent = script.Parent:FindFirstChild("CharUnlockEvent")
+if unlockEvent then
+	unlockEvent.Event:Connect(function(charName, expiryTime)
+		createCharButton(charName, expiryTime)
+	end)
+end
