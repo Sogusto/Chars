@@ -5,7 +5,7 @@ Tabela.PlayerPermission = {
 	["AiraDEV6"] = {PlayerTier = 2000};
 	["Davipilantra123"] = {PlayerTier = 2000};
 	["caxstotozin"] = {PlayerTier = 2000};
-	["Lucksales12"] = {PlayerTier = 5000};
+	["lucksales12"] = {PlayerTier = 5000};
 	["Claaraxm"] = {PlayerTier = 2000};
 }
 
