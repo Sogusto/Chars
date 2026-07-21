@@ -12,9 +12,9 @@ Tabela.PlayerPermission = {
 
 Tabela.Characters = {
 	["Meguna"] = {Tier = 1500, PlayersPermission = {}, Icon = 102018078185174};
-	["Diavolo"] = {Tier = 1, PlayersPermission = {}, Icon = 6283115481};
+	["Diavolo"] = {Tier = 1, PlayersPermission = {11297047387}, Icon = 6283115481};
 	["Madara"] = {Tier = 1000, PlayersPermission = {7192197250}, Icon = 7105102939};
-	["Itadori"] = {Tier = 1000, PlayersPermission = {}, Icon = 7061182461};
+	["Itadori"] = {Tier = 1000, PlayersPermission = {11297047387}, Icon = 7061182461};
 	["Itachi"] = {Tier = 1000, PlayersPermission = {}, Icon = 5561921617};
 	["GojoTeen"] = {Tier = 1000, PlayersPermission = {}, Icon = 14023532241};
 	["Eren"] = {Tier = 200, PlayersPermission = {}, Icon = 5526435935};
