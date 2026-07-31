@@ -8,7 +8,9 @@ Tabela.PlayerPermission = {
 	["lucksales12"] = {PlayerTier = 5000};
 	["Claaraxm"] = {PlayerTier = 2000};
     ["guibrosss"] = {PlayerTier = 1000};
-    ["Bwresty"] = {PlayerTier = 2000};
+    ["Bwresty"] = {PlayerTier = 2000}; 
+    ["AX7_RAFT"] = {PlayerTier = 2000}; 
+}
 }
 
 Tabela.Characters = {
