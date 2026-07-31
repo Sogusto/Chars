@@ -21,7 +21,7 @@ Tabela.Characters = {
 	["Eren"] = {Tier = 200, PlayersPermission = {}, Icon = 5526435935};
 	["SukunaHeian"] = {Tier = 2000, PlayersPermission = {}, Icon = 112861864668055};
 	["Inumaki"] = {Tier = 2000, PlayersPermission = {11020147146}, Icon = 6421507763};
-	["Modulo Itadori"] = {Tier = 2500, PlayersPermission = {}, Icon = 123703766024119};
+	["Giorno"] = {Tier = 2500, PlayersPermission = {}, Icon = 7148008553};
     ["Will"] = {Tier = 100, PlayersPermission = {}, Icon = 98611944137962};
 }
 return Tabela
