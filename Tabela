@@ -11,7 +11,6 @@ Tabela.PlayerPermission = {
     ["Bwresty"] = {PlayerTier = 2000}; 
     ["AX7_RAFT"] = {PlayerTier = 2000}; 
 }
-}
 
 Tabela.Characters = {
 	["Meguna"] = {Tier = 1500, PlayersPermission = {}, Icon = 102018078185174};
